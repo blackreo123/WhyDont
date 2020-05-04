@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="global.sesoc.whydont.dao.MemberMapper">
+
+<!-- 아이디중복검사 -->
+<select id="idCheck" parameterType="String" resultType="GM">
+select mid from gmember
+where mid=#{mid}
+</select>
+
+<!-- 회원등록 -->
+<insert id="insertM" parameterType="GM">
+insert into gmember
+(
+	mid,mpwd,mname,memail,msex,midno,mddress
+)
+values(
+	#{mid}
+	,#{mpwd}
+	,#{mname}
+	,#{memail}
+	,#{msex}
+	,#{midno}
+	,#{mddress}
+)
+</insert>
+
+<!-- 로그인할때 정보 대조 -->
+<select id="selectOne" parameterType="GM" resultType="GM">
+	select * from gmember
+	where mid=#{mid}
+	and mpwd=#{mpwd}
+</select>
+<!-- 회원수정할때 회원정보 가져오깃 -->
+<select id="getOne" parameterType="String" resultType="GM">
+select * from gmember
+where mid=#{mid}
+</select>
+<!-- 회원정보 수정  -->
+<update id="mUpdate" parameterType="GM">
+update gmember
+set mid=#{mid}
+	,mpwd=#{mpwd}
+	,mname=#{mname}
+	,memail=#{memail}
+	,mddress=#{mddress}
+	,cupon=#{cupon}
+	<if test="tid != null">
+	,tid=#{tid}
+	</if>
+	<if test="originalfilename != null">
+	,originalfilename=#{originalfilename}
+	,savedfilename=#{savedfilename}
+	</if>
+	where mid=#{mid}
+</update>
+<!-- 회원탈퇴 -->
+<delete id="deleteM" parameterType="String">
+delete from gmember
+where mid=#{mid}
+</delete>
+<!-- 결제 했을때 쿠폰+1 -->
+<update id="cuponU" parameterType="String">
+update gmember
+set cupon = cupon + 1
+where mid=#{mid}
+</update>
+<!-- 피티등록 tid는 넣어주고 쿠폰은 -1 남은 횟수 10회 충전 -->
+<update id="pton" parameterType="map">
+update gmember
+set cupon=cupon -1
+	,tid=#{tid}
+	,nokori=#{nokori}
+where mid=#{mid}
+</update>
+<!-- 트레이너의 아이디를 받아서 해당 회원의 정보 -->
+<select id="getPt" parameterType="String" resultType="GM">
+select *from gmember
+where tid=#{tid}
+</select>
+<!-- 차감 -1 -->
+<update id="saku" parameterType="String">
+update gmember
+set nokori = nokori -1
+where mid=#{mid}
+</update>
+<!-- 피티 관두기 -->
+<update id="deletePt">
+update gmember
+set nokori = 0
+	,tid= null
+where mid=#{mid}
+</update>
+</mapper>

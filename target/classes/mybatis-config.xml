@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  
+<configuration>
+	<typeAliases>
+		<typeAlias type="global.sesoc.whydont.vo.Gmember" alias="GM" />
+		<typeAlias type="global.sesoc.whydont.vo.Gtrainer" alias="GT" />
+		<typeAlias type="global.sesoc.whydont.vo.Ginfo" alias="Gf" />
+		<typeAlias type="global.sesoc.whydont.vo.Greply" alias="GR" />
+	</typeAliases>
+	
+	
+	<mappers>
+		<mapper resource="mapper/memberMapper.xml" />
+		<mapper resource="mapper/trainerMapper.xml" />
+		<mapper resource="mapper/ginfoMapper.xml" />
+		<mapper resource="mapper/greplyMapper.xml" />
+	</mappers>
+</configuration>

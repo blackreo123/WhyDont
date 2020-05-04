@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="global.sesoc.whydont.dao.GinfoMapper">
+
+<!-- 전체공지 RowBounds 이용 -->
+<select id="ginfoList" resultType="GF" parameterType="map">
+ select * from ginfo 
+	    where 
+	    <choose>
+	    	<when test="searchItem == 'title'">
+	    	title 
+	    	</when>
+	    	<when test="searchItem == 'content'">
+	    	content
+	    	</when>
+	    	<when test="searchItem == 'writer'">
+	    	writer 
+	    	</when>
+	    </choose>
+	    like '%'||#{searchWord}||'%'
+	    order by infono desc
+</select>
+
+
+<!-- 공지 등록 -->
+<insert id="insertGinfo" parameterType="GF">
+insert into ginfo
+(
+	infono
+	,writer
+	,title
+	,content
+	
+	,originalfilename
+	,savedfilename
+	,tid
+)
+values
+(
+	ginfo_seq.nextval
+	,#{writer}
+	,#{title}
+	,#{content}
+	<if test="originalfilename != null">
+	,#{originalfilename}
+	,#{savedfilename}
+	</if>
+	,#{tid}
+)
+</insert>
+
+<!-- 공지 하나 읽기 -->
+<select id="ginfoDetail" parameterType="int" resultType="GF">
+select * from ginfo
+where infono=#{infono}
+</select>
+
+<!-- 공지 삭제하기 -->
+<delete id="deleteGinfo" parameterType="int">
+delete from ginfo
+where infono=#{infono}
+</delete>
+
+<!-- 공지수정  -->
+<update id="updateGinfo" parameterType="GF">
+update ginfo
+set title=#{title}
+	,content=#{content}
+	
+	,regdate=default
+	<if test="originalfilename != null">
+	,originalfilename=#{originalfilename}
+	,savedfilename = #{savedfilename}
+	</if>
+	
+	
+	where infono=#{infono}
+</update>
+
+<!-- 조회수  -->
+<update id="updateHit" parameterType="int">
+update ginfo
+set hitcount= hitcount +1
+where infono=#{infono}
+</update>
+
+<!-- 전체 글 수 조회 -->
+<select id="getGinfoCount" parameterType="map" resultType="int">
+	select count(*) from ginfo
+	where
+	<choose>
+    	<when test="searchItem == 'title'">
+    	title 
+    	</when>
+    	<when test="searchItem == 'content'">
+    	content
+    	</when>
+    	<when test="searchItem == 'writer'">
+    	writer 
+    	</when>
+    </choose>
+    like '%'||#{searchWord}||'%'
+    order by infono desc
+</select>
+
+
+</mapper>

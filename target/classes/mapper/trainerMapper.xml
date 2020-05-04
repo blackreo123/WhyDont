@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="global.sesoc.whydont.dao.TrainerMapper">
+
+<!-- 아이디중복검사 -->
+<select id="tidCheck" parameterType="String" resultType="GT">
+select tid from gtrainer
+where tid=#{tid}
+</select>
+
+<!-- 트레이너등록 -->
+<insert id="insertT" parameterType="GT">
+insert into gtrainer
+(
+	tid,tpwd,tname,temail,tsex,tidno,tddress
+)
+values(
+	#{tid}
+	,#{tpwd}
+	,#{tname}
+	,#{temail}
+	,#{tsex}
+	,#{tidno}
+	,#{tddress}
+)
+</insert>
+
+<!-- 로그인할때 정보 대조 -->
+<select id="tselectOne" parameterType="GT" resultType="GT">
+	select * from gtrainer
+	where tid=#{tid}
+	and tpwd=#{tpwd}
+</select>
+<!-- 정보수정할때 정보 찾기 -->
+<select id="getOne" parameterType="String" resultType="GT">
+select * from gtrainer
+where tid=#{tid}
+</select>
+<!-- 트레이너 정보 수정 -->
+<update id="tUpdate" parameterType="GT">
+update gtrainer
+set tid=#{tid}
+	,tpwd=#{tpwd}
+	,tname=#{tname}
+	,temail=#{temail}
+	,tddress=#{tddress}
+	<if test="originalfilename != null">
+	,originalfilename=#{originalfilename}
+	,savedfilename=#{savedfilename}
+	</if>
+	,pr=#{pr}
+	where tid=#{tid}
+</update>
+<!-- 트레이너 탈퇴 -->
+<delete id="deleteT" parameterType="String">
+delete from gtrainer
+where tid=#{tid}
+</delete>
+<!-- 트레이너 리스트 -->
+<select id="getList" resultType="GT">
+select * from gtrainer
+</select>
+</mapper>
